@@ -10,7 +10,15 @@ impl ProcessChecker {
 
     /// Check if the given executable is running
     pub fn is_running(&self, pid: Pid, executable_path: &str) -> crate::error::Result<bool> {
-        let output = Command::new("ps").arg("-p").arg(pid.to_string()).output()?;
+        let output = Command::new("ps")
+            .arg("-p")
+            .arg(pid.to_string())
+            .arg("-opid,args")
+            .output()?;
+
+        let output_text = String::from_utf8_lossy(&output.stdout);
+        log::debug!("ps command exited with status {}", output.status,);
+        log::debug!("ps command output:\n{}", output_text);
 
         // No process for the PID was found
         if !output.status.success() {
@@ -18,7 +26,7 @@ impl ProcessChecker {
         }
 
         // Check if the information for the PID matches the expected executable
-        if !String::from_utf8_lossy(&output.stdout).contains(executable_path) {
+        if !output_text.contains(executable_path) {
             log::warn!(
                 "PID {} does not match the given executable '{}'",
                 pid,
