@@ -31,8 +31,6 @@ impl PidFile {
         };
 
         if bytes_read > 0 {
-            println!("{}", bytes_read);
-
             match text.trim().parse::<Pid>() {
                 Ok(e) => TriState::Some(e),
                 Err(_) => TriState::Error(Error::Pid(format!(
