@@ -24,9 +24,9 @@ fn run() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
     if args.len() != 3 {
         let message = format!(
-            r"Unexpected number of arguments: {}
+            r"Axel F will take care that executable is running
+
 Usage {} /path/to/executable /path/to/pid-file",
-            args.len(),
             &args[0]
         );
 
